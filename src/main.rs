@@ -1,4 +1,6 @@
 mod cryptopals;
+#[cfg(test)]
+mod tests;
 
 extern crate clap;
 

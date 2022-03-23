@@ -1,6 +1,4 @@
 pub mod set1;
-#[cfg(test)]
-mod tests;
 
 extern crate thiserror;
 
