@@ -1,28 +1,19 @@
-extern crate thiserror;
+use super::super::FormatError;
 
-use thiserror::Error;
-
-#[derive(Error, Debug)]
-#[error("{encoding} : {message}")]
-pub struct FormatError{
-    encoding: String,
-    message: String,
-}
-
-pub fn challenge_1(val: &str){
+pub fn challenge(val: &str) -> Option<String>{
     let b64 = match hex_string_to_b64(&val){       //converting given string (expectedly hex string) into base64
         Ok(r)  => r,
         Err(e) => {
             eprintln!("Error when converting hex string to base 64 : {}", e);
-            "".to_string()
+            return None;
         }
     };
-    println!("{}", b64);
+    Some(b64)
 }
 
 
 
-pub fn hex_string_to_b64(s: &str) -> Result<String, FormatError>{
+fn hex_string_to_b64(s: &str) -> Result<String, FormatError>{
     let hex:Vec<u8> = hex_string_to_bytes(s)?;                //converting given hex string into byte equivalents. e.g : "aa" would be x'aa', or b'10101010', or 170_u8
     let b64:String = b64_encode(&hex);                        //encoding bytes into base64 string
     Ok(b64)
@@ -30,7 +21,7 @@ pub fn hex_string_to_b64(s: &str) -> Result<String, FormatError>{
 
 
 //This will iterate through all couples of hexadecimal characters of the given string, turning each character into their numeric equivalent and combining each couple into a single byte. 
-pub fn hex_string_to_bytes(hex: &str) -> Result<Vec<u8>, FormatError>{
+fn hex_string_to_bytes(hex: &str) -> Result<Vec<u8>, FormatError>{
     
     if hex.len()%2 != 0 || hex.len() != hex.chars().count() {
         //String::len returns the length of the string in bytes, not the number of characters.
@@ -49,7 +40,27 @@ pub fn hex_string_to_bytes(hex: &str) -> Result<Vec<u8>, FormatError>{
     Ok(r)
 }
 
-pub fn make_byte_from_hex(hex1: char, hex2: char) -> Result<u8, FormatError> {
+//NOTE : Found this. Should do the same thing (with fewer checks) :
+    // let mut bytes = Vec::new();
+    //     for i in 0..(hex.len()/2) {
+    //         let res = u8::from_str_radix(&hex[2*i .. 2*i+2], 16);        << Secret sauce here
+    //         match res {
+    //             Ok(v) => bytes.push(v),
+    //             Err(e) => println!("Problem with hex: {}", e),
+    //         };
+    //     };
+    // }
+
+
+
+
+
+
+
+
+
+
+fn make_byte_from_hex(hex1: char, hex2: char) -> Result<u8, FormatError> {
     let msb = (hex1
         .to_digit(16)
         .ok_or(
@@ -72,7 +83,7 @@ pub fn make_byte_from_hex(hex1: char, hex2: char) -> Result<u8, FormatError> {
 
 
 
-pub fn b64_encode(bytes: &[u8]) -> String {
+fn b64_encode(bytes: &[u8]) -> String {
     let b64_word_count = (((bytes.len() as f64)/3.) * 4.).ceil() as usize;
 
     let mut b64_words:Vec<u8> = Vec::with_capacity(b64_word_count);
@@ -118,7 +129,7 @@ pub fn b64_encode(bytes: &[u8]) -> String {
 
 
 
-pub fn b64_word_to_char(word: u8) -> Result<char, FormatError> {
+fn b64_word_to_char(word: u8) -> Result<char, FormatError> {
     match word {
         0..=25  => Ok((word + 65) as char),
         26..=51 => Ok((word + 71) as char),
@@ -129,7 +140,7 @@ pub fn b64_word_to_char(word: u8) -> Result<char, FormatError> {
   }
 }
 
-pub fn make_b64_char(b1: u8, b2: u8, window_slide: u8) -> u8 {
+fn make_b64_char(b1: u8, b2: u8, window_slide: u8) -> u8 {
     ((((b1 as u16) << 8 | (b2 as u16)) >> window_slide) as u8) & 0b00111111
 }
 

@@ -3,6 +3,7 @@ mod cryptopals;
 extern crate clap;
 
 use clap::Parser;
+use cryptopals::*;
 
 /// Implementation of the Cryptopals sets of challenges.
 #[derive(Parser, Debug)]
@@ -22,8 +23,13 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    match (args.set, args.challenge){
-        (1, 1)  => cryptopals::set1::challenge_1(&args.input),
-        _       => eprintln!("set/challenge not found")
-    }
+    let r = match (args.set, args.challenge){
+        (1, 1)  => set1::challenge1::challenge(&args.input),
+        _       => {
+            eprintln!("set/challenge not found");
+            return;
+        }
+    };
+
+    println!("{}", r.unwrap());
 }
