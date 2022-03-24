@@ -5,6 +5,7 @@ use rstest::*;
 
 
 
+
 #[rstest]
 #[case("Testing 1 byte, value 0", "00", Some("AA==".to_string()))]
 #[case("Testing more bytes (10), value 0",                                          "00000000000000000000",                                                                                 Some("AAAAAAAAAAAAAA==".to_string()))]

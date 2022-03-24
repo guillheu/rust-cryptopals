@@ -1,4 +1,4 @@
-use super::super::FormattingError;
+use super::super::{ FormattingError, Bytes };
 
 /// Runs cryptopals' set 1 challenge 1 <https://cryptopals.com/sets/1/challenges/1>
 /// 
@@ -28,14 +28,14 @@ pub fn challenge(val: &str) -> Option<String>{
 #[doc(alias = "hexadecimal")]
 #[doc(alias = "base 64")]
 fn hex_string_to_b64(s: &str) -> Result<String, FormattingError>{
-    let hex:Vec<u8> = hex_string_to_bytes(s)?;                //converting given hex string into byte equivalents. e.g : "aa" would be x'aa', or b'10101010', or 170_u8
+    let hex:Bytes = hex_string_to_bytes(s)?;                //converting given hex string into byte equivalents. e.g : "aa" would be x'aa', or b'10101010', or 170_u8
     let b64:String = b64_encode(&hex);                        //encoding bytes into base64 string
     Ok(b64)
 }
 
 /// Converts a hex string into a list of bytes.
 #[doc(alias = "hexadecimal")]
-fn hex_string_to_bytes(hex: &str) -> Result<Vec<u8>, FormattingError>{
+fn hex_string_to_bytes(hex: &str) -> Result<Bytes, FormattingError>{
     
     if hex.len()%2 != 0 || hex.len() != hex.chars().count() {
         //String::len returns the length of the string in bytes, not the number of characters.
@@ -47,7 +47,7 @@ fn hex_string_to_bytes(hex: &str) -> Result<Vec<u8>, FormattingError>{
         //Thus, so should its capacity if we want to optimise memory usage
         return Err(FormattingError{encoding: "hexadecimal".to_string(), message: "Hex string should have an even amount of characters".to_string()});
     }
-    let mut r:Vec<u8> = Vec::with_capacity(hex.len()/2);
+    let mut r:Bytes = Vec::with_capacity(hex.len()/2);
     for byte_hex in hex.chars().collect::<Vec<char>>().windows(2).step_by(2) {
         r.push(make_byte_from_hex(byte_hex[0], byte_hex[1])?);          //second byte => 4 least signifiant bits. leave them in the least significant half. merge (bitwise OR) with other half.
     }
@@ -102,7 +102,7 @@ fn make_byte_from_hex(hex1: char, hex2: char) -> Result<u8, FormattingError> {
 fn b64_encode(bytes: &[u8]) -> String {
     let b64_word_count = (((bytes.len() as f64)/3.) * 4.).ceil() as usize;
 
-    let mut b64_words:Vec<u8> = Vec::with_capacity(b64_word_count);
+    let mut b64_words:Bytes = Vec::with_capacity(b64_word_count);
 
     let mut padding:u8 = 0;
 
