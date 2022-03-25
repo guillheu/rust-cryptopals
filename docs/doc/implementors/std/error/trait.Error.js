@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["cryptopals_rust"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.59.0/std/error/trait.Error.html\" title=\"trait std::error::Error\">Error</a> for <a class=\"struct\" href=\"cryptopals_rust/struct.EncodingError.html\" title=\"struct cryptopals_rust::EncodingError\">EncodingError</a>","synthetic":false,"types":["cryptopals_rust::EncodingError"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

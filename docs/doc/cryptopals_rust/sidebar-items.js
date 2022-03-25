@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["set1",""]]});
+initSidebarItems({"enum":[["EncodingType",""]],"mod":[["set1",""]],"struct":[["Bytes","This newtype will make it easier to handle bytes for cryptographic operations. A newtype is preferable to an alias, to avoid having bytes-specific methods apply too freely with other Vec-based data types, and vice-versa. e.g. a method for Bytes will not work for instance on a `type Ascii = Vec<u8>`, which is a good thing : )"],["EncodingError","Generic error structure for all encoding errors"]]});
