@@ -1,4 +1,4 @@
-use super::super::{ FormattingError, Bytes };
+use super::super::{ EncodingType, EncodingError, Bytes };
 
 /// Runs cryptopals' set 1 challenge 1 <https://cryptopals.com/sets/1/challenges/1>
 /// 
@@ -27,15 +27,15 @@ pub fn challenge(val: &str) -> Option<String>{
 /// Converts a hex string into a base 64 encoded string
 #[doc(alias = "hexadecimal")]
 #[doc(alias = "base 64")]
-fn hex_string_to_b64(s: &str) -> Result<String, FormattingError>{
-    let hex:Bytes = hex_string_to_bytes(s)?;                //converting given hex string into byte equivalents. e.g : "aa" would be x'aa', or b'10101010', or 170_u8
-    let b64:String = b64_encode(&hex);                        //encoding bytes into base64 string
+fn hex_string_to_b64(s: &str) -> Result<String, EncodingError>{
+    let bytes:Bytes = hex_string_to_bytes(s)?;                //converting given hex string into byte equivalents. e.g : "aa" would be x'aa', or b'10101010', or 170_u8
+    let b64:String = b64_encode(bytes);                        //encoding bytes into base64 string
     Ok(b64)
 }
 
 /// Converts a hex string into a list of bytes.
 #[doc(alias = "hexadecimal")]
-fn hex_string_to_bytes(hex: &str) -> Result<Bytes, FormattingError>{
+fn hex_string_to_bytes(hex: &str) -> Result<Bytes, EncodingError>{
     
     if hex.len()%2 != 0 || hex.len() != hex.chars().count() {
         //String::len returns the length of the string in bytes, not the number of characters.
@@ -45,9 +45,9 @@ fn hex_string_to_bytes(hex: &str) -> Result<Bytes, FormattingError>{
         //And every 2 hex character encodes a byte
         //So the length of the byte vector should be half that of the hex string
         //Thus, so should its capacity if we want to optimise memory usage
-        return Err(FormattingError{encoding: "hexadecimal".to_string(), message: "Hex string should have an even amount of characters".to_string()});
+        return Err(EncodingError{encoding: EncodingType::Hexadecimal, message: "Hex string should have an even amount of characters".to_string()});
     }
-    let mut r:Bytes = Vec::with_capacity(hex.len()/2);
+    let mut r:Bytes = Bytes::with_capacity(hex.len()/2);
     for byte_hex in hex.chars().collect::<Vec<char>>().windows(2).step_by(2) {
         r.push(make_byte_from_hex(byte_hex[0], byte_hex[1])?);          //second byte => 4 least signifiant bits. leave them in the least significant half. merge (bitwise OR) with other half.
     }
@@ -75,16 +75,16 @@ fn hex_string_to_bytes(hex: &str) -> Result<Bytes, FormattingError>{
 
 /// Converts two hex digits into a byte
 #[doc(alias = "hexadecimal")]
-fn make_byte_from_hex(hex1: char, hex2: char) -> Result<u8, FormattingError> {
+fn make_byte_from_hex(hex1: char, hex2: char) -> Result<u8, EncodingError> {
     let msb = (hex1
         .to_digit(16)
         .ok_or(
-            FormattingError{encoding: "hexadecimal".to_string(), message: format!("found non hexadecimal digit '{}'", hex1)}
+            EncodingError{encoding: EncodingType::Hexadecimal, message: format!("found non hexadecimal digit '{}'", hex1)}
         )? as u8) << 4;
     let lsb = hex2
         .to_digit(16)
         .ok_or(
-            FormattingError{encoding: "hexadecimal".to_string(), message: format!("found non hexadecimal digit '{}'", hex2)}
+            EncodingError{encoding: EncodingType::Hexadecimal, message: format!("found non hexadecimal digit '{}'", hex2)}
         )? as u8;
     Ok(msb | lsb)
 }
@@ -99,10 +99,10 @@ fn make_byte_from_hex(hex1: char, hex2: char) -> Result<u8, FormattingError> {
 
 /// Encodes a slice of bytes into a base 64 encoded string.
 #[doc(alias = "base 64")]
-fn b64_encode(bytes: &[u8]) -> String {
+fn b64_encode(bytes: Bytes) -> String {
     let b64_word_count = (((bytes.len() as f64)/3.) * 4.).ceil() as usize;
 
-    let mut b64_words:Bytes = Vec::with_capacity(b64_word_count);
+    let mut b64_words:Bytes = Bytes::with_capacity(b64_word_count);
 
     let mut padding:u8 = 0;
 
@@ -130,8 +130,8 @@ fn b64_encode(bytes: &[u8]) -> String {
 
     let mut out:String = String::new();
 
-    for word in b64_words {
-        out.push(b64_word_to_char(word).expect("found value > 63"));
+    for word in b64_words.iter() {
+        out.push(b64_word_to_char(*word).expect("found value > 63"));
     }
 
     for _ in 0..padding {
@@ -146,14 +146,14 @@ fn b64_encode(bytes: &[u8]) -> String {
 
 /// Converts a base 64 value (0 - 63) into its corresponding character
 #[doc(alias = "base 64")]
-fn b64_word_to_char(word: u8) -> Result<char, FormattingError> {
+fn b64_word_to_char(word: u8) -> Result<char, EncodingError> {
     match word {
         0..=25  => Ok((word + 65) as char),
         26..=51 => Ok((word + 71) as char),
         52..=61 => Ok((word - 4) as char),
         62      => Ok('+'),
         63      => Ok('/'),
-        _       => Err(FormattingError {encoding: "base 64".to_string(), message: format!("given value {} greater than max valid value 63", word)}),
+        _       => Err(EncodingError {encoding: EncodingType::Hexadecimal, message: format!("given value {} greater than max valid value 63", word)}),
   }
 }
 
