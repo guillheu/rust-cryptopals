@@ -8,7 +8,7 @@
 
     <input type="text" id="input" name="input">     <select name="challenges" id="challenges">
         <optgroup label="Set 1">
-            <option value="1">challenge 1</option>
+            <option value="1" selected="selected">challenge 1</option>
             <option value="1" disabled>challenge 2</option>
             <option value="1" disabled>challenge 3</option>
             <option value="1" disabled>challenge 4</option>
@@ -101,10 +101,10 @@
             button.onclick = function() {
                 console.log("Firing!");
                 var input = document.getElementById("input");
-                var chall = document.getElementById("challenge");
+                var chall = document.getElementById("challenges");
                 var output = document.getElementById("output");
                 var r;
-                if (chall.value == "challenge 1") {
+                if (chall.value == "1") {
                     r = challenge(input.value);
                 }
                 output.innerText = r;
