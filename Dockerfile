@@ -23,7 +23,7 @@ RUN cargo doc --lib --release --no-deps --target-dir docs
 RUN cargo install wasm-pack
 RUN wasm-pack build --target web
 
-FROM nginxinc/nginx-unprivileged:1.20.2-perl
+FROM nginxinc/nginx-unprivileged:1.21.6-alpine
 
 COPY --from=test-build /root/rust-cryptopals/docs /usr/share/nginx/html/docs
 COPY --from=test-build /root/rust-cryptopals/pkg /usr/share/nginx/html/pkg
