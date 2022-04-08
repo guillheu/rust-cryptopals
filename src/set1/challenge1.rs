@@ -1,4 +1,5 @@
 use super::super::{ FormattingError, Bytes };
+use wasm_bindgen::prelude::*;
 
 /// Runs cryptopals' set 1 challenge 1 <https://cryptopals.com/sets/1/challenges/1>
 /// 
@@ -12,6 +13,7 @@ use super::super::{ FormattingError, Bytes };
 /// ```
 #[doc(alias = "hexadecimal")]
 #[doc(alias = "base 64")]
+#[wasm_bindgen]
 pub fn challenge(val: &str) -> Option<String>{
     let b64 = match hex_string_to_b64(&val){       //converting given string (expectedly hex string) into base64
         Ok(r)  => r,

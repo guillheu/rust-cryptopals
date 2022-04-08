@@ -1,0 +1,15 @@
+{
+  "name": "cryptopals_rust",
+  "collaborators": [
+    "Guillaume Heu"
+  ],
+  "version": "1.0.0",
+  "files": [
+    "cryptopals_rust_bg.wasm",
+    "cryptopals_rust.js",
+    "cryptopals_rust.d.ts"
+  ],
+  "module": "cryptopals_rust.js",
+  "types": "cryptopals_rust.d.ts",
+  "sideEffects": false
+}
