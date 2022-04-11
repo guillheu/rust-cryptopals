@@ -1,0 +1,1 @@
+cargo test -- --nocapture && cargo doc --no-deps --lib --target-dir ../docs && cargo build --release && wasm-pack build --target web
