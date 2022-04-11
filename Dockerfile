@@ -28,4 +28,5 @@ FROM nginxinc/nginx-unprivileged:1.21.6-alpine
 COPY --from=test-build /root/rust-cryptopals/docs /usr/share/nginx/html/rust/docs
 COPY --from=test-build /root/rust-cryptopals/pkg /usr/share/nginx/html/rust/pkg
 COPY index.html /usr/share/nginx/html
+COPY docker-hub.png /usr/share/nginx/html
 
