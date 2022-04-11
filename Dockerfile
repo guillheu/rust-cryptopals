@@ -2,9 +2,9 @@ FROM rust as test-build
 
 WORKDIR /root/rust-cryptopals
 
-COPY src/ src/
-COPY tests/ tests/
-COPY Cargo.toml .
+COPY rust/src/ src/
+COPY rust/tests/ tests/
+COPY rust/Cargo.toml .
 COPY README.md .
 
 #Testing
@@ -27,5 +27,5 @@ FROM nginxinc/nginx-unprivileged:1.21.6-alpine
 
 COPY --from=test-build /root/rust-cryptopals/docs /usr/share/nginx/html/docs
 COPY --from=test-build /root/rust-cryptopals/pkg /usr/share/nginx/html/pkg
-COPY index.html /usr/share/nginx/html
+COPY rust/index.html /usr/share/nginx/html
 
