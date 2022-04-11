@@ -25,7 +25,7 @@ RUN wasm-pack build --target web
 
 FROM nginxinc/nginx-unprivileged:1.21.6-alpine
 
-COPY --from=test-build /root/rust-cryptopals/docs /usr/share/nginx/html/docs
-COPY --from=test-build /root/rust-cryptopals/pkg /usr/share/nginx/html/pkg
+COPY --from=test-build /root/rust-cryptopals/docs /usr/share/nginx/html/rust/docs
+COPY --from=test-build /root/rust-cryptopals/pkg /usr/share/nginx/html/rust/pkg
 COPY index.html /usr/share/nginx/html
 
